@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.todo.todo.ui.activities.addTask">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1.1">
+
+                <include layout="@layout/toolbar"></include>
+
+                <ImageView
+                    android:id="@+id/doneButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/done_button"
+                    android:src="@drawable/ic_done_white_24dp" />
+            </LinearLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/task_details"></include>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/subTaskLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/subtaskTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.84"
+            android:hint="@string/databaseKeySubtasks"
+            android:textColor="@color/black_overlay"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/addSubTask"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.16"
+            android:contentDescription="@string/description_add_button"
+            android:src="@drawable/ic_add_black_24dp" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

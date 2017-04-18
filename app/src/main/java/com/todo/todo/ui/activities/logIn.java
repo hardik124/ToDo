@@ -1,11 +1,10 @@
-package com.todo.todo.UI.Activities;
+package com.todo.todo.ui.activities;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
@@ -24,8 +23,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.todo.todo.R;
-import com.todo.todo.UI.Activities.Base.BaseActivity;
-import com.todo.todo.UI.Activities.Home.Home;
+import com.todo.todo.ui.activities.base.BaseActivity;
+import com.todo.todo.ui.activities.home.Home;
 
 public class logIn extends BaseActivity {
 
@@ -48,15 +47,10 @@ public class logIn extends BaseActivity {
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabaseUsers.keepSynced(true);
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser()!=null)
-        {
-
-        }
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 hideProgressDialog();
-                Log.d("User",firebaseAuth.getCurrentUser().getUid());
                 if (firebaseAuth.getCurrentUser() != null) {
                                 showSnack("Logged in");
                                 hideProgressDialog();

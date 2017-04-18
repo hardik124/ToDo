@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.todo.todo.ui.activities.ShowTask">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1.15">
+
+            <include layout="@layout/toolbar"></include>
+
+            <ImageView
+                android:id="@+id/delButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.15"
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/delete_task_button"
+                android:paddingTop="5dp"
+                android:src="@drawable/ic_delete" />
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <include layout="@layout/task_details"></include>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:text="@string/databaseKeySubtasks"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/subTasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

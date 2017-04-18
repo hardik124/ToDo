@@ -1,4 +1,4 @@
-package com.todo.todo.Utils.Adapters;
+package com.todo.todo.utils.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

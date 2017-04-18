@@ -1,4 +1,4 @@
-package com.todo.todo.UI.Activities;
+package com.todo.todo.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

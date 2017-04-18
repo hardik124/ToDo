@@ -1,4 +1,4 @@
-package com.todo.todo.UI.Views;
+package com.todo.todo.ui.view;
 
 public interface BaseActivityCallback {
 

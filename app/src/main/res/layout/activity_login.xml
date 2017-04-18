@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".UI.Activities.logIn">
+    tools:context=".ui.activities.logIn">
 
     <ImageView
         android:id="@+id/imageView"
@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="106dp"
-        android:background="@drawable/logo" />
+        android:background="@drawable/logo"
+        android:contentDescription="@string/logo" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/GoogleSignIn"
@@ -34,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
-        android:textSize="16dp" />
+        android:textSize="40sp" />
 
 
 </RelativeLayout>

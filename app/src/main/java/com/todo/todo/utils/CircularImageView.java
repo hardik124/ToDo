@@ -1,4 +1,4 @@
-package com.todo.todo.Utils;
+package com.todo.todo.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -103,7 +103,7 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     }
 
     private int measureWidth(int measureSpec) {
-        int result = 0;
+        int result;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
@@ -121,7 +121,7 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     }
 
     private int measureHeight(int measureSpecHeight) {
-        int result = 0;
+        int result;
         int specMode = MeasureSpec.getMode(measureSpecHeight);
         int specSize = MeasureSpec.getSize(measureSpecHeight);
 

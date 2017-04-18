@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bakground"
-    tools:context="com.todo.todo.UI.Fragments.Completed">
+    tools:context="com.todo.todo.ui.fragment.TaskList">
 
    <android.support.v7.widget.RecyclerView
+       android:id="@+id/todoRecycler"
        android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:id="@+id/todoRecycler">
+       android:layout_height="match_parent">
 
    </android.support.v7.widget.RecyclerView>
 

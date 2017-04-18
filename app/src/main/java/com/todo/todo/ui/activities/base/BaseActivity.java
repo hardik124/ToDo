@@ -1,4 +1,4 @@
-package com.todo.todo.UI.Activities.Base;
+package com.todo.todo.ui.activities.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,13 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.todo.todo.R;
-import com.todo.todo.UI.Views.BaseActivityCallback;
+import com.todo.todo.ui.view.BaseActivityCallback;
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseActivityCallback {
 
     protected Toolbar toolbar;
+    protected Snackbar snack;
     private ProgressDialog progress;
-
 
     @Override
     public void setContentView(int layoutResID) {
@@ -53,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     public void setToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(
                     new View.OnClickListener() {
@@ -102,14 +101,18 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
      * @param message   Message that the toast must show.
      * @param toastType Duration for which the toast must be visible.
      */
-    public void showToast(@NonNull String message, @NonNull int toastType) {
+    public void showToast(String message, int toastType) {
         Toast.makeText(BaseActivity.this, message, toastType).show();
     }
 
     public void showSnack(String message, int length)
     {
+        showSnack(message, length, getCurrentFocus());
+    }
+
+    public void showSnack(String message, int length, View view) {
         try {
-            Snackbar snack = Snackbar.make(getCurrentFocus(), message, length);
+            snack = Snackbar.make(view, message, length);
             TextView snackBarText = (TextView) snack.getView().findViewById(android.support.design.R.id.snackbar_text);
             snackBarText.setTextColor(Color.WHITE);
             snack.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.snackBar));
@@ -117,15 +120,16 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
     public boolean showSnack(String message)
     {
         showSnack(message,Snackbar.LENGTH_LONG);
         return true;
     }
 
+    public Snackbar getSnack() {
+        return snack;
+    }
 
     public void showProgressDialog() {
         showProgressDialog(getString(R.string.working));
@@ -157,7 +161,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     }
 
     protected void setActionBarTitle(int title) {
-        getSupportActionBar().setTitle(getResources().getText(title));
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(getResources().getText(title));
     }
 
     public Toolbar getToolbar() {
