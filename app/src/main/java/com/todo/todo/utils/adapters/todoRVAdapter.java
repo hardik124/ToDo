@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.todo.todo.R;
 import com.todo.todo.models.todo_item;
-import com.todo.todo.ui.activities.ShowTask;
+import com.todo.todo.ui.activities.tasks.ShowTask;
 import com.todo.todo.viewholder.todoViewHolder;
 
 
@@ -20,7 +21,7 @@ public class todoRVAdapter {
 
     public todoRVAdapter(String type, String status) {
         this.type = type;
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(type);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(type);
         mType = mDatabase.orderByChild("status").equalTo(status);
         mType.keepSynced(true);
     }
@@ -48,7 +49,7 @@ public class todoRVAdapter {
                 });
                 viewHolder.setLayout(model.getStatus());
                 viewHolder.setTitle(model.getTitle());
-                viewHolder.setCheckbox(FirebaseDatabase.getInstance().getReference().child(type).child(model.getKey()).child("status"));
+                viewHolder.setCheckbox(FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(type).child(model.getKey()).child("status"));
 
             }
 

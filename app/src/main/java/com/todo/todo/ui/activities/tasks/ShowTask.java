@@ -1,4 +1,4 @@
-package com.todo.todo.ui.activities;
+package com.todo.todo.ui.activities.tasks;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,7 +54,7 @@ public class ShowTask extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showProgressDialog();
-                FirebaseDatabase.getInstance().getReference(getString(R.string.databseKey)).child(task.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+                FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databseKey)).child(task.getKey()).removeValue(new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         showSnack(getString(R.string.taskDeleted));

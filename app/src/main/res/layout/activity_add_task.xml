@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context="com.todo.todo.ui.activities.addTask">
+    tools:context="com.todo.todo.ui.activities.tasks.addTask">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,6 +43,7 @@
         <include layout="@layout/task_details"></include>
 
         <ScrollView
+            android:id="@+id/svSubTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

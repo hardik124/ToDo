@@ -36,6 +36,20 @@
     <string name="logo">logo icon</string>
     <string name="header">header</string>
     <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="about_me">About Me</string>
+    <string name="Error_retrieving">Error retrieving data</string>
+    <string name="titleEmpt">Title empty , cannot add task</string>
+    <string name="descEmpty">Description empty , Do you want to continue?</string>
+    <string name="loggedIn">Logged in</string>
+    <string name="loggedOut">Signed out</string>
+    <string name="internetUnavailable">Internet unavailable , Cannot sign in</string>
+    <string name="onBackPress">Please click BACK again to exit</string>
+    <string name="signing_in">Signing in...</string>
+    <string name="SignInFailes">Sign in failed</string>
+    <string name="defaultImage"><![CDATA[https://firebasestorage.googleapis.com/v0/b/zconnect-89fbd.appspot.com/o/PhonebookImage%2FdefaultprofilePhone.png?alt=media&token=5f814762-16dc-4dfb-ba7d-bcff0de7a336]]></string>
+    <string name="settingAccount">Setting up account</string>
+    <string name="user_details">User details</string>
 
 
 </resources>

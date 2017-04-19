@@ -1,4 +1,4 @@
-package com.todo.todo.ui.activities;
+package com.todo.todo.ui.activities.tasks;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.todo.todo.R;
@@ -54,7 +56,7 @@ public class addTask extends BaseActivity {
             public void onClick(View v) {
                 String title = subtaskTitle.getText().toString();
                 if (TextUtils.isEmpty(title)) {
-                    showToast("Title empty , Cannot add subtask");
+                    showToast(getString(R.string.descEmpty));
                 } else {
                     subtasks.add(title);
                     addLayout(title);
@@ -66,18 +68,25 @@ public class addTask extends BaseActivity {
     }
 
     private void addLayout(String title) {
-        ViewGroup mSubtasks = (ViewGroup) findViewById(R.id.subTaskLayout);
+
+        final ViewGroup mSubtasks = (ViewGroup) findViewById(R.id.subTaskLayout);
         View subTask = LayoutInflater.from(this).inflate(R.layout.row_todo_subtask, mSubtasks, false);
         ((TextView) subTask.findViewById(R.id.todo_title)).setText(title);
-        //((RadioButton) subTask.findViewById(R.id.todo_radio_button)).setChecked(true);
         mSubtasks.addView(subTask);
+        final ScrollView scrollView = (ScrollView) findViewById(R.id.svSubTask);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 
     private void onDoneButtonClick() {
         if (TextUtils.isEmpty(title.getText())) {
-            showSnack("Title empty , cannot add task");
+            showSnack(getString(R.string.titleEmpt));
         } else if (TextUtils.isEmpty(description.getText())) {
-            showSnack("Description empty , Do you want to continue?");
+            showSnack(getString(R.string.descEmpty));
             getSnack().setAction("Yes", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,8 +99,8 @@ public class addTask extends BaseActivity {
 
     private void postData() {
         showProgressDialog();
-        DatabaseReference mTask = FirebaseDatabase.getInstance().getReference(getString(R.string.databseKey)).push();
-        DatabaseReference mSubTask = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseKeySubtasks)).push();
+        DatabaseReference mTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databseKey)).push();
+        DatabaseReference mSubTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databaseKeySubtasks)).push();
 
         todo_item task = new todo_item();
         task.setTitle(title.getText().toString());

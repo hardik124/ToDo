@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activities.home.Home">
+    tools:context=".ui.activities.tasks.Home">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -36,9 +36,12 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:clickable="true"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="14dp"
         app:fabSize="normal"
+        app:rippleColor="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.todo.todo.R;
+import com.todo.todo.ui.activities.tasks.Home;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +27,7 @@ public class logoFlash extends AppCompatActivity {
     void openLogin() {
         new Timer().schedule(new TimerTask() {
             public void run() {
-                Intent intent = new Intent(logoFlash.this, logIn.class);
+                Intent intent = new Intent(logoFlash.this, Home.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

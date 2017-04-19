@@ -1,4 +1,4 @@
-package com.todo.todo.ui.activities;
+package com.todo.todo.ui.activities.user;
 
 
 import android.content.Intent;
@@ -20,18 +20,20 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.todo.todo.R;
 import com.todo.todo.ui.activities.base.BaseActivity;
-import com.todo.todo.ui.activities.home.Home;
+import com.todo.todo.ui.activities.tasks.Home;
 
 public class logIn extends BaseActivity {
 
     boolean doubleBackToExitPressedOnce = false;
+    Intent loginIntent;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mDatabaseUsers;
     private SignInButton mGoogleSignIn;
     private int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
@@ -44,26 +46,13 @@ public class logIn extends BaseActivity {
         mGoogleSignIn = (SignInButton) findViewById(R.id.GoogleSignIn);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
-        mDatabaseUsers.keepSynced(true);
-        mAuth = FirebaseAuth.getInstance();
+        showProgressDialog();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                hideProgressDialog();
-                if (firebaseAuth.getCurrentUser() != null) {
-                                showSnack("Logged in");
-                                hideProgressDialog();
-                                Intent loginIntent = new Intent(logIn.this, Home.class);
-                                loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(loginIntent);
-                                finish();
-                    } else {
-                        showSnack(" Signed out ");
-                    }
-                }
+                checkUser(firebaseAuth);
+            }
         };
-
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -84,18 +73,51 @@ public class logIn extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!isNetworkAvailable(getApplicationContext())) {
-                    showSnack("Internet unavailable , Cannot sign in");
+                    showSnack(getString(R.string.internetUnavailable));
                 } else {
                     signIn();
                 }
-
 
 
             }
         });
     }
 
+    private void checkUser(final FirebaseAuth firebaseAuth) {
+        if (firebaseAuth.getCurrentUser() != null) {
+            showSnack(getString(R.string.loggedIn));
+            FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
+                        loginIntent = new Intent(logIn.this, Home.class);
+                        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        hideProgressDialog();
+                        startActivity(loginIntent);
+                        finish();
+                    } else {
+                        loginIntent = new Intent(logIn.this, setDetails.class);
+                        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        hideProgressDialog();
+                        startActivity(loginIntent);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    hideProgressDialog();
+                }
+            });
+
+        } else {
+            hideProgressDialog();
+            showSnack(getString(R.string.loggedOut));
+        }
+    }
+
     private void signIn() {
+        showProgressDialog();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -109,7 +131,7 @@ public class logIn extends BaseActivity {
         }
 
         doubleBackToExitPressedOnce = true;
-        showToast("Please click BACK again to exit");
+        showToast(getString(R.string.onBackPress));
 
         new Handler().postDelayed(new Runnable() {
 
@@ -120,6 +142,7 @@ public class logIn extends BaseActivity {
         }, 2000);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -127,14 +150,14 @@ public class logIn extends BaseActivity {
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            showProgressDialog("Signing in...");
+            showProgressDialog(getString(R.string.signing_in));
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
                 hideProgressDialog();
-                showSnack("Sign in failed");
+                showSnack(getString(R.string.SignInFailes));
             }
 
         }
@@ -150,7 +173,7 @@ public class logIn extends BaseActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (!task.isSuccessful()) {
-                            showSnack("Authentication Failed");
+                            showSnack(getString(R.string.SignInFailes));
                             hideProgressDialog();
                         }
                     }

@@ -132,13 +132,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     }
 
     public void showProgressDialog() {
-        showProgressDialog(getString(R.string.working));
+        showProgressDialog(getString(R.string.working), this);
+    }
+
+    public void showProgressDialog(String message) {
+        showProgressDialog(message, this);
     }
 
     @Override
-    public void showProgressDialog(String message) {
+    public void showProgressDialog(String message, Context ctx) {
         if (progress == null) {
-            progress = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+            progress = new ProgressDialog(ctx, ProgressDialog.STYLE_SPINNER);
             progress.setCancelable(false);
         }
         progress.setMessage(message);
@@ -158,11 +162,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         if (getSupportActionBar() != null) {
             setTitle(title);
         }
-    }
-
-    protected void setActionBarTitle(int title) {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(getResources().getText(title));
     }
 
     public Toolbar getToolbar() {

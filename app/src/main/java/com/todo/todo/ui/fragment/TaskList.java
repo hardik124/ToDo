@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.todo.todo.R;
 import com.todo.todo.utils.adapters.todoRVAdapter;
 
@@ -52,9 +53,10 @@ public class TaskList extends Fragment {
         productLinearLayout.setStackFromEnd(true);
 
         mTodoList.setLayoutManager(productLinearLayout);
-        todoRVAdapter mRVAdapter = new todoRVAdapter(getString(R.string.databseKey), status);
-        mTodoList.setAdapter(mRVAdapter.getAdapter());
-
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            todoRVAdapter mRVAdapter = new todoRVAdapter(getString(R.string.databseKey), status);
+            mTodoList.setAdapter(mRVAdapter.getAdapter());
+        }
 
         return mView;
     }
