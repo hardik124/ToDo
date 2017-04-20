@@ -47,9 +47,14 @@
     <string name="onBackPress">Please click BACK again to exit</string>
     <string name="signing_in">Signing in...</string>
     <string name="SignInFailes">Sign in failed</string>
-    <string name="defaultImage"><![CDATA[https://firebasestorage.googleapis.com/v0/b/zconnect-89fbd.appspot.com/o/PhonebookImage%2FdefaultprofilePhone.png?alt=media&token=5f814762-16dc-4dfb-ba7d-bcff0de7a336]]></string>
     <string name="settingAccount">Setting up account</string>
     <string name="user_details">User details</string>
+    <string name="no_tasks_available">No tasks available</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_extra">widget extra</string>
+    <string name="extraPos">extraPos</string>
 
 
 </resources>

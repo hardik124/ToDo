@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -51,9 +52,7 @@
         <activity
             android:name=".ui.activities.tasks.ShowTask"
             android:parentActivityName=".ui.activities.tasks.Home"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.user.UserDetails"
             android:label="@string/user_details"
@@ -63,6 +62,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.todo.todo.ui.activities.tasks.Home" />
         </activity>
+
+        <receiver android:name=".tasksWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/tasks_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".utils.ListViewWidgetService"
+            android:enabled="true"
+            android:exported="true">
+
+        </service>
     </application>
 
 </manifest>

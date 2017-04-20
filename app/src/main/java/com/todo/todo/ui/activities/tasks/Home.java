@@ -45,8 +45,15 @@ public class Home extends BaseActivity implements NavigationView.OnNavigationIte
     @Override
     protected void onStart() {
         super.onStart();
-        currentUser = new userDetailsModel();
-        checkUser();
+        if (isNetworkAvailable(this)) {
+            currentUser = new userDetailsModel();
+            checkUser();
+            hideProgressDialog();
+        } else {
+            assert tabLayout != null;
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(0);
+        }
 
 
     }
@@ -65,7 +72,6 @@ public class Home extends BaseActivity implements NavigationView.OnNavigationIte
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        setupViewPager(viewPager);
         addFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +158,7 @@ public class Home extends BaseActivity implements NavigationView.OnNavigationIte
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 showSnack(getString(R.string.Error_retrieving));
+                hideProgressDialog();
             }
         });
 
@@ -182,8 +189,10 @@ public class Home extends BaseActivity implements NavigationView.OnNavigationIte
                     } else {
                         setNavigationHeader();
                         assert tabLayout != null;
+                        setupViewPager(viewPager);
                         tabLayout.setupWithViewPager(viewPager);
                         viewPager.setCurrentItem(0);
+                        hideProgressDialog();
 
                     }
                 }

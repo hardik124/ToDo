@@ -4,7 +4,6 @@ import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -15,20 +14,24 @@ public class todoViewHolder extends RecyclerView.ViewHolder {
 
     private View mView;
     private TextView mTitle;
-    private CheckBox checkBox;
 
     public todoViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
         mTitle = (TextView) mView.findViewById(R.id.todo_title);
-        checkBox = (CheckBox) mView.findViewById(R.id.todo_checkbox);
+
     }
 
     public void setCheckbox(final DatabaseReference mData) {
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox;
+        checkBox = (CheckBox) mView.findViewById(R.id.todo_checkbox);
+        checkBox.setEnabled(true);
+        mData.keepSynced(true);
+        checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (checkBox.isChecked()) {
+            public void onClick(View v) {
+                Boolean isChecked = checkBox.isChecked();
+                if (isChecked) {
                     mTitle.setPaintFlags(mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     mData.setValue(mView.getResources().getString(R.string.completedTask));
                 } else {
@@ -43,6 +46,8 @@ public class todoViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setLayout(String type) {
+        CheckBox checkBox;
+        checkBox = (CheckBox) mView.findViewById(R.id.todo_checkbox);
         if (type.equals(mView.getResources().getString(R.string.completedTask))) {
             checkBox.setChecked(true);
             mTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);

@@ -69,7 +69,7 @@ public class ShowTask extends BaseActivity {
         mSubtasks.setHasFixedSize(false);
 
         LinearLayoutManager productLinearLayout = new LinearLayoutManager(this);
-        productLinearLayout.setReverseLayout(true);
+        productLinearLayout.setReverseLayout(false);
         productLinearLayout.setStackFromEnd(true);
 
         mSubtasks.setLayoutManager(productLinearLayout);

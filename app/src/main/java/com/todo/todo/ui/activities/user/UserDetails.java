@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -102,47 +103,56 @@ public class UserDetails extends BaseActivity {
 
 
     private void setData() {
-        mUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.getValue(userDetailsModel.class);
-                etDesc.setText(currentUser.getDesc());
-                etName.setText(currentUser.getName());
-                Picasso.with(UserDetails.this).load(currentUser.getImageUrl()).into(userImage);
-                hideProgressDialog();
+        if (isNetworkAvailable(this)) {
+            mUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    currentUser = dataSnapshot.getValue(userDetailsModel.class);
+                    etDesc.setText(currentUser.getDesc());
+                    etName.setText(currentUser.getName());
+                    Picasso.with(UserDetails.this).load(currentUser.getImageUrl()).into(userImage);
+                    hideProgressDialog();
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                showSnack(getString(R.string.Error_retrieving));
-                hideProgressDialog();
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    showSnack(getString(R.string.Error_retrieving));
+                    hideProgressDialog();
+                }
+            });
 
-
+        } else {
+            showSnack("Error, network not available");
+            hideProgressDialog();
+        }
     }
 
     private void postData() {
-        showProgressDialog();
-        if (imageChanged) {
-            StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-            final StorageReference filepath = mStorage.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    currentUser.setImageUrl(taskSnapshot.getDownloadUrl().toString());
-                }
-            });
+        if (isNetworkAvailable(this)) {
+            showProgressDialog();
+            if (imageChanged) {
+                StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+                final StorageReference filepath = mStorage.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        currentUser.setImageUrl(taskSnapshot.getDownloadUrl().toString());
+                    }
+                });
+            }
+            currentUser.setDesc(etDesc.getText().toString());
+            currentUser.setName(etName.getText().toString());
+            mUserDetails.setValue(currentUser);
+            hideProgressDialog();
+            showSnack("Details Updated");
+            finish();
+        } else {
+            hideProgressDialog();
+            finish();
         }
-        currentUser.setDesc(etDesc.getText().toString());
-        currentUser.setName(etName.getText().toString());
-        mUserDetails.setValue(currentUser);
-        hideProgressDialog();
-        showSnack("Details Updated");
-        finish();
-    }
 
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,6 +189,7 @@ public class UserDetails extends BaseActivity {
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
+                Log.d("error in crop", error.getMessage());
             }
         }
 

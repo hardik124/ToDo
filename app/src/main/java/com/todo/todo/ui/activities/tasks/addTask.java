@@ -83,44 +83,51 @@ public class addTask extends BaseActivity {
     }
 
     private void onDoneButtonClick() {
-        if (TextUtils.isEmpty(title.getText())) {
-            showSnack(getString(R.string.titleEmpt));
-        } else if (TextUtils.isEmpty(description.getText())) {
-            showSnack(getString(R.string.descEmpty));
-            getSnack().setAction("Yes", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    postData();
-                }
-            });
-        } else
-            postData();
+        if (isNetworkAvailable(this)) {
+            if (TextUtils.isEmpty(title.getText())) {
+                showSnack(getString(R.string.titleEmpt));
+            } else if (TextUtils.isEmpty(description.getText())) {
+                showSnack(getString(R.string.descEmpty));
+                getSnack().setAction("Yes", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        postData();
+                    }
+                });
+            } else
+                postData();
+        }
+
     }
 
     private void postData() {
-        showProgressDialog();
-        DatabaseReference mTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databseKey)).push();
-        DatabaseReference mSubTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databaseKeySubtasks)).push();
+        if (isNetworkAvailable(this)) {
+            showProgressDialog();
+            DatabaseReference mTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databseKey)).push();
+            DatabaseReference mSubTask = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(getString(R.string.databaseKeySubtasks)).push();
 
-        todo_item task = new todo_item();
-        task.setTitle(title.getText().toString());
-        task.setDescription(description.getText().toString());
-        task.setKey(mTask.getKey());
-        task.setSubtaskKey(mSubTask.getKey());
-        task.setStatus(getString(R.string.pendingTask));
+            todo_item task = new todo_item();
+            task.setTitle(title.getText().toString());
+            task.setDescription(description.getText().toString());
+            task.setKey(mTask.getKey());
+            task.setSubtaskKey(mSubTask.getKey());
+            task.setStatus(getString(R.string.pendingTask));
 
-        //Post subtask items
+            //Post subtask items
 
-        for (String title : subtasks) {
-            DatabaseReference newTask = mSubTask.push();
-            subTask_item item = new subTask_item();
-            item.setStatus(getString(R.string.pendingTask));
-            item.setKey(newTask.getKey());
-            item.setTitle(title);
-            newTask.setValue(item);
+            for (String title : subtasks) {
+                DatabaseReference newTask = mSubTask.push();
+                subTask_item item = new subTask_item();
+                item.setStatus(getString(R.string.pendingTask));
+                item.setKey(newTask.getKey());
+                item.setTitle(title);
+                newTask.setValue(item);
+            }
+            mTask.setValue(task);
+            hideProgressDialog();
+            finish();
+        } else {
+            hideProgressDialog();
         }
-        mTask.setValue(task);
-        hideProgressDialog();
-        finish();
     }
 }

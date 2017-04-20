@@ -13,17 +13,21 @@ import com.todo.todo.models.todo_item;
 import com.todo.todo.ui.activities.tasks.ShowTask;
 import com.todo.todo.viewholder.todoViewHolder;
 
+import java.util.ArrayList;
+
 
 public class todoRVAdapter {
 
     private String type;
     private Query mType;
-
+    private ArrayList<String> list;
     public todoRVAdapter(String type, String status) {
         this.type = type;
+        @SuppressWarnings("ConstantConditions")
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(type);
         mType = mDatabase.orderByChild("status").equalTo(status);
-        mType.keepSynced(true);
+        mType.keepSynced(false);
+        list = new ArrayList<>();
     }
 
     public FirebaseRecyclerAdapter<todo_item, todoViewHolder> getAdapter()
@@ -36,8 +40,18 @@ public class todoRVAdapter {
                 todoViewHolder.class,
                 mType
         ) {
+//
+//            @Override
+//            public todo_item getItem(int position) {
+//                return list.get(position);
+//            }
+
+
             @Override
             protected void populateViewHolder(final todoViewHolder viewHolder, final todo_item model, int position) {
+                if (!(list.contains(model.getKey()))) {
+                    list.add(model.getKey());
+                }
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -49,9 +63,11 @@ public class todoRVAdapter {
                 });
                 viewHolder.setLayout(model.getStatus());
                 viewHolder.setTitle(model.getTitle());
-                viewHolder.setCheckbox(FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(type).child(model.getKey()).child("status"));
 
+                //noinspection ConstantConditions
+                viewHolder.setCheckbox(FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(type).child(model.getKey()).child("status"));
             }
+
 
         };
     }

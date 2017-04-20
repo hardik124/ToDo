@@ -48,6 +48,7 @@ public class setDetails extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_details);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        //noinspection ConstantConditions
         userId = mAuth.getCurrentUser().getUid();
         userProfile = (CircularImageView) findViewById(R.id.profileImage);
         Button submit = (Button) findViewById(R.id.submitDetails);
@@ -91,54 +92,60 @@ public class setDetails extends BaseActivity {
 
 
     private void startAccountSetup() {
-        EditText userName = (EditText) findViewById(R.id.username);
+        if (isNetworkAvailable(this)) {
+            EditText userName = (EditText) findViewById(R.id.username);
 
-        final String username = userName.getText().toString().trim();
-        final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference().child(userId);
-        currentUser = new userDetailsModel();
-        if (!TextUtils.isEmpty(username)) {
-            if (mImageUri == null) {
-                showSnack(" Please select profile picture ");
+            final String username = userName.getText().toString().trim();
+            final DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference().child(userId);
+            currentUser = new userDetailsModel();
+            if (!TextUtils.isEmpty(username)) {
+                if (mImageUri == null) {
+                    showSnack(" Please select profile picture ");
 
-                getSnack().setAction("Skip", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        currentUser.setImageUrl(userImageURL); //Sets
-                        currentUser.setName(username); //User
-                        mDatabaseUser.setValue(currentUser);
-                        hideProgressDialog();
-                        gotoHome();
-                    }
-                });
+                    getSnack().setAction("Skip", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            currentUser.setImageUrl(userImageURL); //Sets
+                            currentUser.setName(username); //User
+                            mDatabaseUser.setValue(currentUser);
+                            hideProgressDialog();
+                            gotoHome();
+                        }
+                    });
+                } else {
+
+                    final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("UserImages").child(userId);
+                    showProgressDialog(getString(R.string.settingAccount));
+                    filePath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            userImageURL = taskSnapshot.getDownloadUrl().toString();
+                            currentUser.setImageUrl(userImageURL);
+                            currentUser.setName(username);
+                            mDatabaseUser.setValue(currentUser);
+                            hideProgressDialog();
+                            gotoHome();
+                        }
+                    });
+                }
+
             } else {
-
-                final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("UserImages").child(userId);
-                showProgressDialog(getString(R.string.settingAccount));
-                filePath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                        userImageURL = taskSnapshot.getDownloadUrl().toString();
-                        currentUser.setImageUrl(userImageURL);
-                        currentUser.setName(username);
-                        mDatabaseUser.setValue(currentUser);
-                        hideProgressDialog();
-                        gotoHome();
+                String message;
+                {
+                    if (mImageUri == null) {
+                        message = "Please select image";
+                    } else {
+                        message = "Enter Name";
                     }
-                });
+                    showSnack(message);
+                }
+
             }
 
         } else {
-            String message;
-            {
-                if (mImageUri == null) {
-                    message = "Please select image";
-                } else {
-                    message = "Enter Name";
-                }
-                showSnack(message);
-            }
-
+            hideProgressDialog();
+            gotoHome();
         }
     }
 
