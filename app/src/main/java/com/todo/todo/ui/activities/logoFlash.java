@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.todo.todo.R;
 import com.todo.todo.ui.activities.tasks.Home;
 
@@ -16,7 +17,7 @@ public class logoFlash extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_logo_flash);

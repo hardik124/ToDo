@@ -63,7 +63,10 @@
                 android:value="com.todo.todo.ui.activities.tasks.Home" />
         </activity>
 
-        <receiver android:name=".tasksWidget">
+        <receiver
+            android:name=".tasksWidget"
+            android:icon="@drawable/example_appwidget_preview"
+            android:label="Example Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -72,7 +75,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/tasks_widget_info" />
         </receiver>
-
         <service
             android:name=".utils.ListViewWidgetService"
             android:enabled="true"
